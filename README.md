@@ -1,2 +1,2 @@
-fundooAdmin-example
+fundooNotesAdmin
 ==============================
