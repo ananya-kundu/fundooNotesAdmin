@@ -5,8 +5,8 @@
         .module('app')
         .factory('AuthenticationService', AuthenticationService);
 
-    AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$timeout', 'UserService'];
-    function AuthenticationService($http, $cookies, $rootScope, $timeout, UserService) {
+    AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$timeout', 'HttpService','UserService'];
+    function AuthenticationService($http, $cookies, $rootScope, $timeout, HttpService,UserService) {
         var service = {};
 
         service.Login = Login;
@@ -15,22 +15,21 @@
 
         return service;
 
-        function Login(username, password, callback) {
+        function Login(email, password, callback) {
 
             /* Dummy authentication for testing, uses $timeout to simulate api call
              ----------------------------------------------*/
-            $timeout(function () {
-                var response;
-                UserService.GetByUsername(username)
+            $http.post(HttpService.baseUrl+"login",{email, password})
                     .then(function (user) {
-                        if (user !== null && user.password === password) {
+                      var response;
+                        if (user.data !== null && user.data) {
                             response = { success: true };
+                            UserService.setUserToken(user.data.responseMessage);
                         } else {
                             response = { success: false, message: 'Username or password is incorrect' };
                         }
                         callback(response);
-                    });
-            }, 1000);
+                    }).catch(callback);
 
             /* Use this for real authentication
              ----------------------------------------------*/
@@ -40,7 +39,9 @@
             //    });
 
         }
-
+        // $http.get(service.baseUrl+"getusernotecount",{
+        //   .then()
+        // })
         function SetCredentials(username, password) {
             var authdata = Base64.encode(username + ':' + password);
 

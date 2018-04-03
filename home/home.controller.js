@@ -16,7 +16,7 @@
         initController();
 
         function initController() {
-            loadCurrentUser();
+            // loadCurrentUser();
             loadAllUsers();
         }
 
@@ -28,8 +28,17 @@
         }
 
         function loadAllUsers() {
-            UserService.GetAll()
-                .then(function (users) {
+          console.log("initial1",UserService);
+
+            UserService.GetAll().then(function (users) {
+                // console.log("users",users);
+
+                $rootScope.users = users;
+                console.log("users",$rootScope.users);
+                // for (var i = 0; i < $rootScope.users.length; i++) {
+                  // console.log($rootScope.users[i].active);
+                // }
+
                     vm.allUsers = users;
                 });
         }

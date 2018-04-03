@@ -6,10 +6,12 @@
         .config(config)
         .run(run);
 
-    config.$inject = ['$routeProvider', '$locationProvider'];
-    function config($routeProvider, $locationProvider) {
+    config.$inject = ['$routeProvider', '$locationProvider','$httpProvider'];
+    function config($routeProvider, $locationProvider,$httpProvider) {
+      $httpProvider.interceptors.push('jwtInjector');
+
         $routeProvider
-            .when('/', {
+            .when('/home', {
                 controller: 'HomeController',
                 templateUrl: 'home/home.view.html',
                 controllerAs: 'vm'

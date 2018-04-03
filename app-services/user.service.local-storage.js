@@ -3,7 +3,7 @@
 
     angular
         .module('app')
-        .factory('UserService', UserService);
+        .factory('UserServiceLocalstorage', UserService);
 
     UserService.$inject = ['$timeout', '$filter', '$q'];
     function UserService($timeout, $filter, $q) {
@@ -114,6 +114,7 @@
 
         function setUsers(users) {
             localStorage.users = JSON.stringify(users);
+            // localStorage.setItem(users);
         }
     }
 })();

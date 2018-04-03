@@ -5,33 +5,33 @@
         .module('app')
         .factory('UserService', UserService);
 
-    UserService.$inject = ['$http'];
-    function UserService($http) {
-        var service = {};
+    UserService.$inject = ['$http','HttpService'];
+    function UserService($http,HttpService) {
 
+        var service = {};
         service.GetAll = GetAll;
         service.GetById = GetById;
         service.GetByUsername = GetByUsername;
         service.Create = Create;
         service.Update = Update;
         service.Delete = Delete;
-
-        return service;
+        service.setUserToken = setUserToken;
+        service.getUserToken = getUserToken;
 
         function GetAll() {
-            return $http.get('/api/users').then(handleSuccess, handleError('Error getting all users'));
+            return $http.get(HttpService.baseUrl + 'getusernotecount').then(handleSuccess, handleError('Error getting all users'));
         }
 
         function GetById(id) {
-            return $http.get('/api/users/' + id).then(handleSuccess, handleError('Error getting user by id'));
+            return $http.get(HttpService.baseUrl + 'users/' + id).then(handleSuccess, handleError('Error getting user by id'));
         }
 
         function GetByUsername(username) {
-            return $http.get('/api/users/' + username).then(handleSuccess, handleError('Error getting user by username'));
+            return $http.get(HttpService.baseUrl + 'users/' + username).then(handleSuccess, handleError('Error getting user by username'));
         }
 
         function Create(user) {
-            return $http.post('/api/users', user).then(handleSuccess, handleError('Error creating user'));
+            return $http.post(HttpService.baseUrl + 'users', user).then(handleSuccess, handleError('Error creating user'));
         }
 
         function Update(user) {
@@ -45,7 +45,7 @@
         // private functions
 
         function handleSuccess(res) {
-            return res.data;
+            return Promise.resolve(res.data);
         }
 
         function handleError(error) {
@@ -53,6 +53,17 @@
                 return { success: false, message: error };
             };
         }
+
+        function getUserToken() {
+            return localStorage.getItem("token") || null;
+        }
+
+        function setUserToken(token) {
+            localStorage.setItem("token",token);
+            // localStorage.setItem(users);
+        }
+
+      return service;
     }
 
 })();
